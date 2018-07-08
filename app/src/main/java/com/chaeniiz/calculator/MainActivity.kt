@@ -10,7 +10,6 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
     var secondNumber: Long = 0
     var answer: Long = 0
     var isFirst: Boolean = true
-    var startCalculate: Boolean = false
 
     var isNumberDeleted: Boolean = false
     var isNumberClicked: Boolean = false
@@ -26,20 +25,14 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
         val stringBuilder = StringBuilder()
 
         if(etAnswer != null) {
-            if(!isFirst) {
-                if(!isNumberDeleted) {
-                    etAnswer.setText(stringBuilder.delete(0, etAnswer.text.length))
-                    etAnswer.setText(stringBuilder.append(etAnswer.text).append(number))
-                    isNumberDeleted = true
-                } else
-                    etAnswer.setText(stringBuilder.append(etAnswer.text).append(number))
-            } else {
-                if (etAnswer.text.toString() == "0")
-                    etAnswer.setText(number)
-                else {
-                    etAnswer.setText(stringBuilder.append(etAnswer.text).append(number))
-                }
-            }
+            if(!isNumberDeleted) {
+                etAnswer.setText(stringBuilder.delete(0, etAnswer.text.length))
+                etAnswer.setText(stringBuilder.append(etAnswer.text).append(number))
+                isNumberDeleted = true
+            } else if (etAnswer.text.toString() == "0")
+                etAnswer.setText(number)
+            else
+                etAnswer.setText(stringBuilder.append(etAnswer.text).append(number))
         }
     }
 
@@ -47,7 +40,6 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
         etAnswer.text = null
         isFirst = true
         isNumberDeleted = false
-        startCalculate = false
         firstNumber = 0
         secondNumber = 0
         answer = 0
@@ -55,6 +47,9 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
     }
 
     override fun onResultClicked(result: Boolean) {
+        isFirst = true
+        isNumberDeleted = false
+        
         when {
             isPlusMode -> {
                 if(!isResultMode) {
@@ -124,7 +119,7 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
         isPlusMode = true
 
         when {
-            startCalculate -> {
+            !isFirst -> {
                 isNumberDeleted = false
                 if(isNumberClicked) {
                     secondNumber = etAnswer.text.toString().toLong()
@@ -140,7 +135,7 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
                 isFirst = false
                 isResultMode = false
                 isNumberClicked = false
-                startCalculate = true
+                isNumberDeleted = false
             }
         }
     }
@@ -150,7 +145,7 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
         isMinusMode = true
 
         when {
-            startCalculate -> {
+            !isFirst -> {
                 isNumberDeleted = false
                 if(isNumberClicked) {
                     secondNumber = etAnswer.text.toString().toLong()
@@ -166,7 +161,7 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
                 isFirst = false
                 isResultMode = false
                 isNumberClicked = false
-                startCalculate = true
+                isNumberDeleted = false
             }
         }
     }
@@ -176,7 +171,7 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
         isMultiplyMode = true
 
         when {
-            startCalculate -> {
+            !isFirst -> {
                 isNumberDeleted = false
                 if(isNumberClicked) {
                     secondNumber = etAnswer.text.toString().toLong()
@@ -192,7 +187,7 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
                 isFirst = false
                 isResultMode = false
                 isNumberClicked = false
-                startCalculate = true
+                isNumberDeleted = false
             }
         }
     }
@@ -202,7 +197,7 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
         isDivideMode = true
 
         when {
-            startCalculate -> {
+            !isFirst -> {
                 isNumberDeleted = false
                 if(isNumberClicked) {
                     secondNumber = etAnswer.text.toString().toLong()
@@ -218,7 +213,7 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
                 isFirst = false
                 isResultMode = false
                 isNumberClicked = false
-                startCalculate = true
+                isNumberDeleted = false
             }
         }
     }
