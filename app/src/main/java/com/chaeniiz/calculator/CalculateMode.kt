@@ -1,9 +1,9 @@
 package com.chaeniiz.calculator
 
 data class CalculateMode(
-        var plusMode: Boolean = false,
-        var minusMode: Boolean = false,
-        var multiplyMode: Boolean = false,
-        var divideMode: Boolean = false,
-        var resultMode: Boolean = false
+        val plusMode: Boolean = false,
+        val minusMode: Boolean = false,
+        val multiplyMode: Boolean = false,
+        val divideMode: Boolean = false,
+        val resultMode: Boolean = false
 )

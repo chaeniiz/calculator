@@ -50,39 +50,56 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
     override fun onResultClicked(result: Boolean) {
         isFirst = true
         inputNewNumber = true
+        secondNumber = etAnswer.text.toString().toLong()
 
-        when {
-            calculateMode == CalculateMode(plusMode = true) -> {
-                insertSecondNumber()
+        when(calculateMode) {
+            CalculateMode(plusMode = true) -> {
+                calculate(firstNumber, secondNumber)
                 firstNumber = secondNumber
+                etAnswer.setText(answer.toString())
+                inputNewNumber = true
                 calculateMode = CalculateMode(plusMode = true, resultMode = true)
             }
-            calculateMode == CalculateMode(plusMode = true, resultMode = true) -> {
-                insertSecondNumber()
+            CalculateMode(plusMode = true, resultMode = true) -> {
+                calculate(firstNumber, etAnswer.text.toString().toLong())
+                etAnswer.setText(answer.toString())
+                inputNewNumber = true
             }
-            calculateMode == CalculateMode(minusMode = true) -> {
-                insertSecondNumber()
+            CalculateMode(minusMode = true) -> {
+                calculate(firstNumber, secondNumber)
                 firstNumber = secondNumber
+                etAnswer.setText(answer.toString())
+                inputNewNumber = true
                 calculateMode = CalculateMode(minusMode = true, resultMode = true)
             }
-            calculateMode == CalculateMode(minusMode = true, resultMode = true) -> {
-                insertSecondNumber()
+            CalculateMode(minusMode = true, resultMode = true) -> {
+                calculate(firstNumber, etAnswer.text.toString().toLong())
+                etAnswer.setText(answer.toString())
+                inputNewNumber = true
             }
-            calculateMode == CalculateMode(multiplyMode = true) -> {
-                insertSecondNumber()
+            CalculateMode(multiplyMode = true) -> {
+                calculate(firstNumber, secondNumber)
                 firstNumber = secondNumber
+                etAnswer.setText(answer.toString())
+                inputNewNumber = true
                 calculateMode = CalculateMode(multiplyMode = true, resultMode = true)
             }
-            calculateMode == CalculateMode(multiplyMode = true, resultMode = true) -> {
-                insertSecondNumber()
+            CalculateMode(multiplyMode = true, resultMode = true) -> {
+                calculate(firstNumber, etAnswer.text.toString().toLong())
+                etAnswer.setText(answer.toString())
+                inputNewNumber = true
             }
-            calculateMode == CalculateMode(divideMode = true) -> {
-                insertSecondNumber()
+            CalculateMode(divideMode = true) -> {
+                calculate(firstNumber, secondNumber)
                 firstNumber = secondNumber
+                etAnswer.setText(answer.toString())
+                inputNewNumber = true
                 calculateMode = CalculateMode(divideMode = true, resultMode = true)
             }
-            calculateMode == CalculateMode(divideMode = true, resultMode = true) -> {
-                insertSecondNumber()
+            CalculateMode(divideMode = true, resultMode = true) -> {
+                calculate(firstNumber, secondNumber)
+                etAnswer.setText(answer.toString())
+                inputNewNumber = true
             }
         }
     }
@@ -91,13 +108,12 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
         calculateMode = CalculateMode(plusMode = true)
 
         when {
-            isFirst || calculateMode.resultMode -> {
+            isFirst || calculateMode.resultMode ->
                 insertFirstNumber()
-            }
             !isFirst -> {
                 inputNewNumber = true
                 if (isNumberClicked) {
-                    insertSecondNumber()
+                    calculate(firstNumber, etAnswer.text.toString().toLong())
                     firstNumber = answer
                     isNumberClicked = false
                 }
@@ -109,13 +125,12 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
         calculateMode = CalculateMode(minusMode = true)
 
         when {
-            isFirst || calculateMode.resultMode -> {
+            isFirst || calculateMode.resultMode ->
                 insertFirstNumber()
-            }
             !isFirst -> {
                 inputNewNumber = true
                 if (isNumberClicked) {
-                    insertSecondNumber()
+                    calculate(firstNumber, etAnswer.text.toString().toLong())
                     firstNumber = answer
                     isNumberClicked = false
                 }
@@ -127,13 +142,12 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
         calculateMode = CalculateMode(multiplyMode = true)
 
         when {
-            isFirst || calculateMode.resultMode -> {
+            isFirst || calculateMode.resultMode ->
                 insertFirstNumber()
-            }
             !isFirst -> {
                 inputNewNumber = true
                 if (isNumberClicked) {
-                    insertSecondNumber()
+                    calculate(firstNumber, etAnswer.text.toString().toLong())
                     firstNumber = answer
                     isNumberClicked = false
                 }
@@ -145,13 +159,12 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
         calculateMode = CalculateMode(divideMode = true)
 
         when {
-            isFirst || calculateMode.resultMode -> {
+            isFirst || calculateMode.resultMode ->
                 insertFirstNumber()
-            }
             !isFirst -> {
                 inputNewNumber = true
                 if (isNumberClicked) {
-                    insertSecondNumber()
+                    calculate(firstNumber, etAnswer.text.toString().toLong())
                     firstNumber = answer
                     isNumberClicked = false
                 }
@@ -160,15 +173,13 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
     }
 
     fun insertFirstNumber() {
-        firstNumber = etAnswer.text.toString().toLong()
+        firstNumber = etAnswer.text.toString().toLongOrNull() ?: 0L
         isFirst = false
-        calculateMode.resultMode = false
         isNumberClicked = false
         inputNewNumber = true
     }
 
-    fun insertSecondNumber() {
-        secondNumber = etAnswer.text.toString().toLong()
+    fun calculate(firstNumber: Long, secondNumber: Long): Long {
         when {
             calculateMode == CalculateMode(plusMode = true)
             || calculateMode == CalculateMode(plusMode = true, resultMode = true) ->
@@ -185,7 +196,7 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
             calculateMode == CalculateMode(divideMode = true, resultMode = true) ->
                     answer = secondNumber / firstNumber
         }
-        etAnswer.setText(answer.toString())
-        inputNewNumber = true
+
+        return answer
     }
 }
