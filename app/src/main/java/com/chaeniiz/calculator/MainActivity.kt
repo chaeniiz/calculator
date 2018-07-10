@@ -4,21 +4,20 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteractionListener {
-
-    var firstNumber: Long = 0
-    var secondNumber: Long = 0
-    var answer: Long = 0
-    var isFirst: Boolean = true
+class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteractionListener, MainView {
 
     var inputNewNumber: Boolean = true
     var isNumberClicked: Boolean = false
 
-    var calculateMode: CalculateMode = CalculateMode()
+    val presenter: MainPresenter = MainPresenter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        presenter.onCreate()
+    }
+
+    override fun showCalculateFragment() {
         supportFragmentManager.beginTransaction()
                 .replace(R.id.frame_calculator, CalculatorFragment.newInstance())
                 .commit()
@@ -39,164 +38,54 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
     }
 
     override fun onResetClicked(reset: Boolean) {
-        etAnswer.text = null
-        isFirst = true
-        inputNewNumber = true
-        firstNumber = 0
-        secondNumber = 0
-        answer = 0
+        resetAnswerView()
+        presenter.resetNumbers()
     }
 
     override fun onResultClicked(result: Boolean) {
-        isFirst = true
         inputNewNumber = true
-        secondNumber = etAnswer.text.toString().toLong()
 
-        when(calculateMode) {
-            CalculateMode(plusMode = true) -> {
-                calculate(firstNumber, secondNumber)
-                firstNumber = secondNumber
-                etAnswer.setText(answer.toString())
-                inputNewNumber = true
-                calculateMode = CalculateMode(plusMode = true, resultMode = true)
-            }
-            CalculateMode(plusMode = true, resultMode = true) -> {
-                calculate(firstNumber, etAnswer.text.toString().toLong())
-                etAnswer.setText(answer.toString())
-                inputNewNumber = true
-            }
-            CalculateMode(minusMode = true) -> {
-                calculate(firstNumber, secondNumber)
-                firstNumber = secondNumber
-                etAnswer.setText(answer.toString())
-                inputNewNumber = true
-                calculateMode = CalculateMode(minusMode = true, resultMode = true)
-            }
-            CalculateMode(minusMode = true, resultMode = true) -> {
-                calculate(firstNumber, etAnswer.text.toString().toLong())
-                etAnswer.setText(answer.toString())
-                inputNewNumber = true
-            }
-            CalculateMode(multiplyMode = true) -> {
-                calculate(firstNumber, secondNumber)
-                firstNumber = secondNumber
-                etAnswer.setText(answer.toString())
-                inputNewNumber = true
-                calculateMode = CalculateMode(multiplyMode = true, resultMode = true)
-            }
-            CalculateMode(multiplyMode = true, resultMode = true) -> {
-                calculate(firstNumber, etAnswer.text.toString().toLong())
-                etAnswer.setText(answer.toString())
-                inputNewNumber = true
-            }
-            CalculateMode(divideMode = true) -> {
-                calculate(firstNumber, secondNumber)
-                firstNumber = secondNumber
-                etAnswer.setText(answer.toString())
-                inputNewNumber = true
-                calculateMode = CalculateMode(divideMode = true, resultMode = true)
-            }
-            CalculateMode(divideMode = true, resultMode = true) -> {
-                calculate(firstNumber, secondNumber)
-                etAnswer.setText(answer.toString())
-                inputNewNumber = true
-            }
-        }
+        presenter.onResultClicked()
     }
 
     override fun onPlusClicked(plus: Boolean) {
-        calculateMode = CalculateMode(plusMode = true)
-
-        when {
-            isFirst || calculateMode.resultMode ->
-                insertFirstNumber()
-            !isFirst -> {
-                inputNewNumber = true
-                if (isNumberClicked) {
-                    calculate(firstNumber, etAnswer.text.toString().toLong())
-                    firstNumber = answer
-                    isNumberClicked = false
-                }
-            }
-        }
+        presenter.onPlusClicked()
     }
 
     override fun onMinusClicked(minus: Boolean) {
-        calculateMode = CalculateMode(minusMode = true)
-
-        when {
-            isFirst || calculateMode.resultMode ->
-                insertFirstNumber()
-            !isFirst -> {
-                inputNewNumber = true
-                if (isNumberClicked) {
-                    calculate(firstNumber, etAnswer.text.toString().toLong())
-                    firstNumber = answer
-                    isNumberClicked = false
-                }
-            }
-        }
+        presenter.onMinusClicked()
     }
 
     override fun onMultiplyClicked(multiply: Boolean) {
-        calculateMode = CalculateMode(multiplyMode = true)
-
-        when {
-            isFirst || calculateMode.resultMode ->
-                insertFirstNumber()
-            !isFirst -> {
-                inputNewNumber = true
-                if (isNumberClicked) {
-                    calculate(firstNumber, etAnswer.text.toString().toLong())
-                    firstNumber = answer
-                    isNumberClicked = false
-                }
-            }
-        }
+        presenter.onMultiplyClicked()
     }
 
     override fun onDivideClicked(divide: Boolean) {
-        calculateMode = CalculateMode(divideMode = true)
-
-        when {
-            isFirst || calculateMode.resultMode ->
-                insertFirstNumber()
-            !isFirst -> {
-                inputNewNumber = true
-                if (isNumberClicked) {
-                    calculate(firstNumber, etAnswer.text.toString().toLong())
-                    firstNumber = answer
-                    isNumberClicked = false
-                }
-            }
-        }
+        presenter.onDivideClicked()
     }
 
-    fun insertFirstNumber() {
-        firstNumber = etAnswer.text.toString().toLongOrNull() ?: 0L
-        isFirst = false
-        isNumberClicked = false
+    fun resetAnswerView() {
+        etAnswer.text = null
         inputNewNumber = true
     }
 
-    fun calculate(firstNumber: Long, secondNumber: Long): Long {
-        when {
-            calculateMode == CalculateMode(plusMode = true)
-            || calculateMode == CalculateMode(plusMode = true, resultMode = true) ->
-                answer = firstNumber + secondNumber
-            calculateMode == CalculateMode(minusMode = true) ->
-                answer = firstNumber - secondNumber
-            calculateMode == CalculateMode(multiplyMode = true)
-            || calculateMode == CalculateMode(multiplyMode = true, resultMode = true) ->
-                answer = firstNumber * secondNumber
-            calculateMode == CalculateMode(divideMode = true) ->
-                    answer = firstNumber / secondNumber
-            calculateMode == CalculateMode(minusMode = true, resultMode = true) ->
-                    answer = secondNumber - firstNumber
-            calculateMode == CalculateMode(divideMode = true, resultMode = true) ->
-                    answer = secondNumber / firstNumber
-        }
+    override fun getAnswerViewData(): Long {
+        return etAnswer.text.toString().toLong()
+    }
 
-        return answer
+    override fun setAnswerViewData(data: Long) {
+        etAnswer.setText(data.toString())
+    }
+
+    override fun inputNewNumber() {
+        inputNewNumber = true
+    }
+
+    override fun isNumberButtonClicked(isClicked: Boolean) {
+        isNumberClicked = isClicked
+    }
+
+    override fun getNumberButtonClicked(): Boolean {
+        return isNumberClicked
     }
 }
