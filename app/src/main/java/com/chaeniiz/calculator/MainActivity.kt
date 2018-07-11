@@ -6,7 +6,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteractionListener, MainView {
 
-    var inputNewNumber: Boolean = true
+    var isNewNumber: Boolean = true
     var isNumberClicked: Boolean = false
 
     val presenter: MainPresenter = MainPresenter(this)
@@ -24,27 +24,16 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
     }
 
     override fun onNumberClicked(number: String) {
-        isNumberClicked = true
-        val stringBuilder = StringBuilder()
-
-        if (inputNewNumber) {
-            etAnswer.setText(stringBuilder.delete(0, etAnswer.text.length))
-            etAnswer.setText(stringBuilder.append(etAnswer.text).append(number))
-            inputNewNumber = false
-        } else if (etAnswer.text.toString() == "0")
-            etAnswer.setText(number)
-        else
-            etAnswer.setText(stringBuilder.append(etAnswer.text).append(number))
+        presenter.onNumberClicked(number.toLong())
     }
 
     override fun onResetClicked(reset: Boolean) {
         resetAnswerView()
-        presenter.resetNumbers()
+        presenter.initNumbersStatus()
     }
 
     override fun onResultClicked(result: Boolean) {
-        inputNewNumber = true
-
+        setInputNewNumber(true)
         presenter.onResultClicked()
     }
 
@@ -64,9 +53,9 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
         presenter.onDivideClicked()
     }
 
-    fun resetAnswerView() {
+    override fun resetAnswerView() {
         etAnswer.text = null
-        inputNewNumber = true
+        isNewNumber = true
     }
 
     override fun getAnswerViewData(): Long {
@@ -77,11 +66,15 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
         etAnswer.setText(data.toString())
     }
 
-    override fun inputNewNumber() {
-        inputNewNumber = true
+    override fun setInputNewNumber(isInputNewNumber: Boolean) {
+        isNewNumber = isInputNewNumber
     }
 
-    override fun isNumberButtonClicked(isClicked: Boolean) {
+    override fun isInputNewNumber(): Boolean {
+        return isNewNumber
+    }
+
+    override fun setNumberButtonClicked(isClicked: Boolean) {
         isNumberClicked = isClicked
     }
 
