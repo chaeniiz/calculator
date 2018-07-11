@@ -2,6 +2,6 @@ package com.chaeniiz.calculator
 
 interface MainView {
     fun showCalculateFragment()
-    fun setAnswerViewData(data: Long)
+    fun setTextEtAnswer(data: Long)
     fun resetAnswerView()
 }

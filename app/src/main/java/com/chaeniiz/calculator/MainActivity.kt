@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
 
     override fun onResetClicked(reset: Boolean) {
         resetAnswerView()
-        presenter.initNumbersStatus()
+        presenter.initNumberStatus()
     }
 
     override fun onResultClicked(result: Boolean) {
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
         etAnswer.text = null
     }
 
-    override fun setAnswerViewData(data: Long) {
+    override fun setTextEtAnswer(data: Long) {
         etAnswer.setText(data.toString())
     }
 }
