@@ -224,12 +224,11 @@ class MainPresenter(val view: MainView) {
                 view.setAnswerViewData(number)
                 view.setInputNewNumber(false)
             }
-            number.equals(0) -> {
+            view.getAnswerViewData().equals(0) -> {
                 view.setAnswerViewData(number)
             }
             else -> {
-                stringBuilder.append(view.getAnswerViewData().toString()).append(number)
-                view.setAnswerViewData(view.getAnswerViewData())
+                view.setAnswerViewData(stringBuilder.append(view.getAnswerViewData().toString()).append(number).toString().toLong())
             }
         }
     }
