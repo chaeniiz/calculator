@@ -6,9 +6,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteractionListener, MainView {
 
-    var isNewNumber: Boolean = true
-    var isNumberClicked: Boolean = false
-
     val presenter: MainPresenter = MainPresenter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,52 +30,30 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
     }
 
     override fun onResultClicked(result: Boolean) {
-        setInputNewNumber(true)
-        presenter.onResultClicked()
+        presenter.onResultClicked(etAnswer.text.toString().toLong())
     }
 
     override fun onPlusClicked(plus: Boolean) {
-        presenter.onPlusClicked()
+        presenter.onPlusClicked(etAnswer.text.toString().toLong())
     }
 
     override fun onMinusClicked(minus: Boolean) {
-        presenter.onMinusClicked()
+        presenter.onMinusClicked(etAnswer.text.toString().toLong())
     }
 
     override fun onMultiplyClicked(multiply: Boolean) {
-        presenter.onMultiplyClicked()
+        presenter.onMultiplyClicked(etAnswer.text.toString().toLong())
     }
 
     override fun onDivideClicked(divide: Boolean) {
-        presenter.onDivideClicked()
+        presenter.onDivideClicked(etAnswer.text.toString().toLong())
     }
 
     override fun resetAnswerView() {
         etAnswer.text = null
-        isNewNumber = true
-    }
-
-    override fun getAnswerViewData(): Long {
-        return etAnswer.text.toString().toLong()
     }
 
     override fun setAnswerViewData(data: Long) {
         etAnswer.setText(data.toString())
-    }
-
-    override fun setInputNewNumber(isInputNewNumber: Boolean) {
-        isNewNumber = isInputNewNumber
-    }
-
-    override fun isInputNewNumber(): Boolean {
-        return isNewNumber
-    }
-
-    override fun setNumberButtonClicked(isClicked: Boolean) {
-        isNumberClicked = isClicked
-    }
-
-    override fun getNumberButtonClicked(): Boolean {
-        return isNumberClicked
     }
 }
