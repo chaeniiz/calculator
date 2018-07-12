@@ -2,19 +2,19 @@ package com.chaeniiz.calculator
 
 class MainPresenter(val view: MainView) {
 
-    private var firstNumber: Long = 0
-    private var inputNumber: Long = 0
-    private var answer: Long = 0
-    private var isFirstOperatorButtonClicked: Boolean = true
-    private var isNewNumber: Boolean = true
-    private var isNumberClicked: Boolean = false
-    private var calculateMode: CalculateMode = CalculateMode()
+    var firstNumber: Long = 0
+    var inputNumber: Long = 0
+    var answer: Long = 0
+    var isFirstOperatorButtonClicked: Boolean = true
+    var isNewNumber: Boolean = true
+    var isNumberClicked: Boolean = false
+    var calculateMode: CalculateMode = CalculateMode()
 
     fun onCreate() {
         view.showCalculateFragment()
     }
 
-    private fun calculate(calculateMode: CalculateMode, firstNumber: Long, secondNumber: Long): Long {
+    fun calculate(calculateMode: CalculateMode, firstNumber: Long, secondNumber: Long): Long {
         when (calculateMode) {
             CalculateMode(plusMode = true),
             CalculateMode(plusMode = true, resultMode = true) ->
@@ -24,12 +24,22 @@ class MainPresenter(val view: MainView) {
             CalculateMode(multiplyMode = true),
             CalculateMode(multiplyMode = true, resultMode = true) ->
                 answer = firstNumber * secondNumber
-            CalculateMode(divideMode = true) ->
-                answer = firstNumber / secondNumber
+            CalculateMode(divideMode = true) -> {
+                try {
+                    answer = firstNumber / secondNumber
+                } catch (e: ArithmeticException) {
+                    answer = firstNumber
+                }
+            }
             CalculateMode(minusMode = true, resultMode = true) ->
                 answer = secondNumber - firstNumber
-            CalculateMode(divideMode = true, resultMode = true) ->
-                answer = secondNumber / firstNumber
+            CalculateMode(divideMode = true, resultMode = true) -> {
+                try {
+                    answer = secondNumber / firstNumber
+                } catch (e: ArithmeticException) {
+                    answer = secondNumber
+                }
+            }
         }
         return answer
     }
@@ -201,14 +211,14 @@ class MainPresenter(val view: MainView) {
         }
     }
 
-    private fun setNumberToFirstNumber(number: Long) {
+    fun setNumberToFirstNumber(number: Long) {
         this.firstNumber = number
         isFirstOperatorButtonClicked = false
         isNumberClicked = false
         setInputNewNumber(true)
     }
 
-    private fun setInputNewNumber(isInputNewNumber: Boolean) {
+    fun setInputNewNumber(isInputNewNumber: Boolean) {
         isNewNumber = isInputNewNumber
     }
 
@@ -226,8 +236,12 @@ class MainPresenter(val view: MainView) {
                 view.setTextEtAnswer(number)
             }
             else -> {
-                inputNumber = stringBuilder.append(inputNumber).append(number).toString().toLong()
-                view.setTextEtAnswer(inputNumber)
+                try {
+                    inputNumber = stringBuilder.append(inputNumber).append(number).toString().toLong()
+                    view.setTextEtAnswer(inputNumber)
+                } catch (e: NumberFormatException) {
+                    view.setTextEtAnswer(inputNumber)
+                }
             }
         }
     }

@@ -1,8 +1,11 @@
 package com.chaeniiz.calculator
 
+import kotlinx.android.synthetic.main.activity_main.*
 import org.junit.Test
 
 import org.junit.Assert.*
+import org.mockito.Mock
+import org.mockito.Mockito.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -11,63 +14,55 @@ import org.junit.Assert.*
  */
 class ExampleUnitTest {
 
-//    @Test
-//    fun calculateTest() {
-//        assertEquals(4, plus(2, 2))
-//        assertEquals(3, minus(6, 3))
-//        assertEquals(12, multiply(4, 3))
-//        assertEquals(2, divide(10, 5))
-//    }
+    @Test
+    fun calculateTest() {
+        assertEquals(4, calculate(CalculateMode(plusMode = true), 2, 2))
+        assertEquals(3, calculate(CalculateMode(minusMode = true), 6, 3))
+        assertEquals(12, calculate(CalculateMode(multiplyMode = true), 4, 3))
+        assertEquals(2, calculate(CalculateMode(divideMode = true), 10, 5))
+    }
 
-//    @Test
-//    fun resultModeTest() {
-//        val activity = MainActivity()
+    @Test
+    fun resultModeTest() {
+        val presenter = MainPresenter(MainActivity())
+
+        assertEquals(4, presenter.calculate(CalculateMode(plusMode = true, resultMode = true), 2, 2))
+        assertEquals(4, presenter.calculate(CalculateMode(minusMode = true, resultMode = true), 4, 8))
+        assertEquals(32, presenter.calculate(CalculateMode(multiplyMode = true, resultMode = true), 4, 8))
+        assertEquals(3, presenter.calculate(CalculateMode(divideMode = true, resultMode = true), 4, 12))
+    }
+
+    @Test
+    fun onlyOperatorsInputedTest() {
+        val presenter = MainPresenter(MainActivity())
+
+//        activity.onPlusClicked(true)
+//        activity.onMinusClicked(true)
+//        activity.onMultiplyClicked(true)
+//        activity.onDivideClicked(true)
 //
-//        activity.calculateMode = CalculateMode(plusMode = true, resultMode = true)
-//        assertEquals(4, activity.calculate(2, 2))
-//
-//        activity.calculateMode = CalculateMode(minusMode = true, resultMode = true)
-//        assertEquals(3, activity.calculate(6, 3))
-//
-//    }
-//
-//    private fun plus(firstNum: Long, secondNum: Long) : Long {
-//        val activity = MainActivity()
-//
-//        activity.calculateMode = CalculateMode(plusMode = true)
-//
-//        return activity.calculate(firstNum, secondNum)
-//    }
-//
-//    private fun minus(firstNum: Long, secondNum: Long) : Long {
-//        val activity = MainActivity()
-//
-//        activity.calculateMode = CalculateMode(minusMode = true)
-//
-//        return activity.calculate(firstNum, secondNum)
-//    }
-//
-//    private fun multiply(firstNum: Long, secondNum: Long) : Long {
-//        val activity = MainActivity()
-//
-//        activity.calculateMode = CalculateMode(multiplyMode = true)
-//
-//        return activity.calculate(firstNum, secondNum)
-//    }
-//
-//    private fun divide(firstNum: Long, secondNum: Long) : Long {
-//        val activity = MainActivity()
-//
-//        activity.calculateMode = CalculateMode(divideMode = true)
-//
-//        return activity.calculate(firstNum, secondNum)
-//    }
-//
-//    private fun resultModePlus(firstNum: Long, secondNum: Long) : Long {
-//        val activity = MainActivity()
-//
-//        activity.calculateMode = CalculateMode(plusMode = true, resultMode = true)
-//
-//        return activity.calculate(firstNum, secondNum)
-//    }
+//        assertEquals(0, activity.etAnswer.text)
+    }
+
+    @Test
+    fun divideToZeroTest() {
+        assertEquals(5, calculate(CalculateMode(divideMode = true), 5, 0))
+    }
+
+    @Test
+    fun numberFormatExceptionTest() {
+        val presenter = MainPresenter(MainActivity())
+
+        for(i in 1..18) {
+            presenter.onNumberClicked(9)
+        }
+
+ //       assertEquals(activity.etAnswer.text, presenter.onNumberClicked(9))
+    }
+
+    private fun calculate(calculateMode: CalculateMode, firstNum: Long, secondNum: Long): Long {
+        val presenter = MainPresenter(MainActivity())
+
+        return presenter.calculate(calculateMode, firstNum, secondNum)
+    }
 }

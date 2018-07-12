@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
         supportFragmentManager.beginTransaction()
                 .replace(R.id.frame_calculator, CalculatorFragment.newInstance())
                 .commit()
+        etAnswer.setText("0")
     }
 
     override fun onNumberClicked(number: String) {
@@ -50,7 +51,7 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
     }
 
     override fun resetAnswerView() {
-        etAnswer.text = null
+        etAnswer.setText("0")
     }
 
     override fun setTextEtAnswer(data: Long) {
