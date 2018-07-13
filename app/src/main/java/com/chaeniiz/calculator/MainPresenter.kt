@@ -51,7 +51,7 @@ class MainPresenter(val view: MainView) {
         inputNumber = 0
     }
 
-    fun onPlusClicked(inputNumber: Long) {
+    fun onPlusClicked() {
         when {
             !isFirstOperatorButtonClicked && !calculateMode.plusMode -> {
                 answer = calculate(calculateMode, firstNumber, inputNumber)
@@ -62,7 +62,7 @@ class MainPresenter(val view: MainView) {
             }
             isFirstOperatorButtonClicked || calculateMode.resultMode -> {
                 calculateMode = CalculateMode(plusMode = true)
-                setNumberToFirstNumber(inputNumber)
+                setNumberToFirstNumber(this.inputNumber)
             }
             !isFirstOperatorButtonClicked -> {
                 calculateMode = CalculateMode(plusMode = true)
@@ -77,7 +77,7 @@ class MainPresenter(val view: MainView) {
         }
     }
 
-    fun onMinusClicked(inputNumber: Long) {
+    fun onMinusClicked() {
         when {
             !isFirstOperatorButtonClicked && !calculateMode.minusMode -> {
                 answer = calculate(calculateMode, firstNumber, inputNumber)
@@ -103,7 +103,7 @@ class MainPresenter(val view: MainView) {
         }
     }
 
-    fun onMultiplyClicked(inputNumber: Long) {
+    fun onMultiplyClicked() {
         when {
             !isFirstOperatorButtonClicked && !calculateMode.multiplyMode -> {
                 answer = calculate(calculateMode, firstNumber, inputNumber)
@@ -129,7 +129,7 @@ class MainPresenter(val view: MainView) {
         }
     }
 
-    fun onDivideClicked(inputNumber: Long) {
+    fun onDivideClicked() {
         when {
             !isFirstOperatorButtonClicked && !calculateMode.divideMode -> {
                 answer = calculate(calculateMode, firstNumber, inputNumber)
@@ -155,7 +155,7 @@ class MainPresenter(val view: MainView) {
         }
     }
 
-    fun onResultClicked(inputNumber: Long) {
+    fun onResultClicked() {
         isFirstOperatorButtonClicked = true
         setInputNewNumber(true)
 
@@ -168,7 +168,7 @@ class MainPresenter(val view: MainView) {
                 calculateMode = CalculateMode(plusMode = true, resultMode = true)
             }
             CalculateMode(plusMode = true, resultMode = true) -> {
-                answer = calculate(CalculateMode(plusMode = true, resultMode = true), firstNumber, inputNumber)
+                answer = calculate(CalculateMode(plusMode = true, resultMode = true), answer, inputNumber)
                 view.setTextEtAnswer(answer)
                 setInputNewNumber(true)
             }
@@ -180,7 +180,7 @@ class MainPresenter(val view: MainView) {
                 calculateMode = CalculateMode(minusMode = true, resultMode = true)
             }
             CalculateMode(minusMode = true, resultMode = true) -> {
-                answer = calculate(CalculateMode(minusMode = true, resultMode = true), firstNumber, inputNumber)
+                answer = calculate(CalculateMode(minusMode = true, resultMode = true), inputNumber, answer)
                 view.setTextEtAnswer(answer)
                 setInputNewNumber(true)
             }
@@ -192,7 +192,7 @@ class MainPresenter(val view: MainView) {
                 calculateMode = CalculateMode(multiplyMode = true, resultMode = true)
             }
             CalculateMode(multiplyMode = true, resultMode = true) -> {
-                answer = calculate(CalculateMode(multiplyMode = true, resultMode = true), firstNumber, inputNumber)
+                answer = calculate(CalculateMode(multiplyMode = true, resultMode = true), answer, inputNumber)
                 view.setTextEtAnswer(answer)
                 setInputNewNumber(true)
             }
@@ -204,7 +204,7 @@ class MainPresenter(val view: MainView) {
                 calculateMode = CalculateMode(divideMode = true, resultMode = true)
             }
             CalculateMode(divideMode = true, resultMode = true) -> {
-                answer = calculate(CalculateMode(divideMode = true, resultMode = true), firstNumber, inputNumber)
+                answer = calculate(CalculateMode(divideMode = true, resultMode = true), inputNumber, answer)
                 view.setTextEtAnswer(answer)
                 setInputNewNumber(true)
             }

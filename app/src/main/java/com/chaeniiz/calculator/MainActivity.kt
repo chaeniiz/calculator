@@ -31,23 +31,23 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
     }
 
     override fun onResultClicked(result: Boolean) {
-        presenter.onResultClicked(etAnswer.text.toString().toLong())
+        presenter.onResultClicked()
     }
 
     override fun onPlusClicked(plus: Boolean) {
-        presenter.onPlusClicked(etAnswer.text.toString().toLong())
+        presenter.onPlusClicked()
     }
 
     override fun onMinusClicked(minus: Boolean) {
-        presenter.onMinusClicked(etAnswer.text.toString().toLong())
+        presenter.onMinusClicked()
     }
 
     override fun onMultiplyClicked(multiply: Boolean) {
-        presenter.onMultiplyClicked(etAnswer.text.toString().toLong())
+        presenter.onMultiplyClicked()
     }
 
     override fun onDivideClicked(divide: Boolean) {
-        presenter.onDivideClicked(etAnswer.text.toString().toLong())
+        presenter.onDivideClicked()
     }
 
     override fun resetAnswerView() {
