@@ -228,8 +228,8 @@ class MainPresenter(val view: MainView) {
 
         when {
             isNewNumber -> {
-                view.setTextEtAnswer(number)
-                inputNumber = number
+                updateEtAnswer(number)
+                updateInputNumber(number)
                 setInputNewNumber(false)
             }
             number.equals(0) -> {
@@ -237,12 +237,20 @@ class MainPresenter(val view: MainView) {
             }
             else -> {
                 try {
-                    inputNumber = stringBuilder.append(inputNumber).append(number).toString().toLong()
-                    view.setTextEtAnswer(inputNumber)
+                    updateInputNumber(stringBuilder.append(inputNumber).append(number).toString().toLong())
+                    updateEtAnswer(inputNumber)
                 } catch (e: NumberFormatException) {
-                    view.setTextEtAnswer(inputNumber)
+                    updateEtAnswer(inputNumber)
                 }
             }
         }
+    }
+
+    fun updateInputNumber(inputNumber: Long) {
+        this.inputNumber = inputNumber
+    }
+
+    fun updateEtAnswer(number: Long) {
+        view.setTextEtAnswer(number)
     }
 }

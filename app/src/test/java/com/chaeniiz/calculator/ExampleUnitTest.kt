@@ -1,11 +1,12 @@
 package com.chaeniiz.calculator
 
-import kotlinx.android.synthetic.main.activity_main.*
 import org.junit.Test
 
 import org.junit.Assert.*
+import org.junit.Before
 import org.mockito.Mock
 import org.mockito.Mockito.*
+import org.mockito.MockitoAnnotations
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -13,6 +14,12 @@ import org.mockito.Mockito.*
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
+    @Mock lateinit var view: MainView
+
+    @Before
+    fun setup() {
+        MockitoAnnotations.initMocks(this)
+    }
 
     @Test
     fun calculateTest() {
@@ -34,14 +41,16 @@ class ExampleUnitTest {
 
     @Test
     fun onlyOperatorsInputedTest() {
-        val presenter = MainPresenter(MainActivity())
+        val presenter = MainPresenter(view)
 
-//        activity.onPlusClicked(true)
-//        activity.onMinusClicked(true)
-//        activity.onMultiplyClicked(true)
-//        activity.onDivideClicked(true)
-//
-//        assertEquals(0, activity.etAnswer.text)
+        presenter.onPlusClicked()
+        presenter.onMinusClicked()
+        presenter.onMultiplyClicked()
+        presenter.onDivideClicked()
+
+        verify(view, times(3)).setTextEtAnswer(0L)
+
+        assertEquals(0, presenter.answer)
     }
 
     @Test
@@ -51,13 +60,13 @@ class ExampleUnitTest {
 
     @Test
     fun numberFormatExceptionTest() {
-        val presenter = MainPresenter(MainActivity())
+        val presenter = MainPresenter(view)
 
-        for(i in 1..18) {
+        for(i in 1..100) {
             presenter.onNumberClicked(9)
         }
 
- //       assertEquals(activity.etAnswer.text, presenter.onNumberClicked(9))
+        assertEquals(999999999999999999, presenter.inputNumber)
     }
 
     private fun calculate(calculateMode: CalculateMode, firstNum: Long, secondNum: Long): Long {
