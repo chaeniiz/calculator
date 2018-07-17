@@ -21,6 +21,9 @@ class MainPresenter(val view: MainView) {
         firstNumber = 0
         answer = 0
         inputNumber = 0
+        isNewNumber = true
+        isNumberClicked = false
+        calculateMode = CalculateMode()
     }
 
     fun onPlusClicked() {
