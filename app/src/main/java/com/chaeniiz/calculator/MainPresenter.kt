@@ -30,19 +30,22 @@ class MainPresenter(val view: MainView) {
         when {
             calculateMode.resultMode -> {
                 calculateMode = CalculateMode(plusMode = true)
-                setNumberToFirstNumber(answer)
-            }
-            !isOperatorButtonClickedFirst && !calculateMode.plusMode -> {
-                answer = calculate(calculateMode, firstNumber, inputNumber)
-                view.setTextEtAnswer(answer)
-                firstNumber = answer
-                setInputNewNumber(true)
-                calculateMode = CalculateMode(plusMode = true)
+                if(isNumberClicked) {
+                    setNumberToFirstNumber(inputNumber)
+                } else
+                    setNumberToFirstNumber(answer)
             }
             isOperatorButtonClickedFirst -> {
                 calculateMode = CalculateMode(plusMode = true)
                 setNumberToFirstNumber(inputNumber)
                 isOperatorButtonClickedFirst = false
+            }
+            !calculateMode.plusMode -> {
+                answer = calculate(calculateMode, firstNumber, inputNumber)
+                view.setTextEtAnswer(answer)
+                firstNumber = answer
+                setInputNewNumber(true)
+                calculateMode = CalculateMode(plusMode = true)
             }
             !isOperatorButtonClickedFirst -> {
                 calculateMode = CalculateMode(plusMode = true)
@@ -55,25 +58,29 @@ class MainPresenter(val view: MainView) {
                 }
             }
         }
+        isNumberClicked = false
     }
 
     fun onMinusClicked() {
         when {
             calculateMode.resultMode -> {
                 calculateMode = CalculateMode(minusMode = true)
-                setNumberToFirstNumber(answer)
-            }
-            !isOperatorButtonClickedFirst && !calculateMode.minusMode -> {
-                answer = calculate(calculateMode, firstNumber, inputNumber)
-                view.setTextEtAnswer(answer)
-                firstNumber = answer
-                setInputNewNumber(true)
-                calculateMode = CalculateMode(minusMode = true)
+                if(isNumberClicked) {
+                    setNumberToFirstNumber(inputNumber)
+                } else
+                    setNumberToFirstNumber(answer)
             }
             isOperatorButtonClickedFirst -> {
                 calculateMode = CalculateMode(minusMode = true)
                 setNumberToFirstNumber(inputNumber)
                 isOperatorButtonClickedFirst = false
+            }
+            !calculateMode.minusMode -> {
+                answer = calculate(calculateMode, firstNumber, inputNumber)
+                view.setTextEtAnswer(answer)
+                firstNumber = answer
+                setInputNewNumber(true)
+                calculateMode = CalculateMode(minusMode = true)
             }
             !isOperatorButtonClickedFirst -> {
                 calculateMode = CalculateMode(minusMode = true)
@@ -86,25 +93,29 @@ class MainPresenter(val view: MainView) {
                 }
             }
         }
+        isNumberClicked = false
     }
 
     fun onMultiplyClicked() {
         when {
             calculateMode.resultMode -> {
                 calculateMode = CalculateMode(multiplyMode = true)
-                setNumberToFirstNumber(answer)
-            }
-            !isOperatorButtonClickedFirst && !calculateMode.multiplyMode -> {
-                answer = calculate(calculateMode, firstNumber, inputNumber)
-                view.setTextEtAnswer(answer)
-                firstNumber = answer
-                setInputNewNumber(true)
-                calculateMode = CalculateMode(multiplyMode = true)
+                if(isNumberClicked) {
+                    setNumberToFirstNumber(inputNumber)
+                } else
+                    setNumberToFirstNumber(answer)
             }
             isOperatorButtonClickedFirst -> {
                 calculateMode = CalculateMode(multiplyMode = true)
                 setNumberToFirstNumber(inputNumber)
                 isOperatorButtonClickedFirst = false
+            }
+            !calculateMode.multiplyMode -> {
+                answer = calculate(calculateMode, firstNumber, inputNumber)
+                view.setTextEtAnswer(answer)
+                firstNumber = answer
+                setInputNewNumber(true)
+                calculateMode = CalculateMode(multiplyMode = true)
             }
             !isOperatorButtonClickedFirst -> {
                 calculateMode = CalculateMode(multiplyMode = true)
@@ -117,25 +128,29 @@ class MainPresenter(val view: MainView) {
                 }
             }
         }
+        isNumberClicked = false
     }
 
     fun onDivideClicked() {
         when {
             calculateMode.resultMode -> {
                 calculateMode = CalculateMode(divideMode = true)
-                setNumberToFirstNumber(answer)
-            }
-            !isOperatorButtonClickedFirst && !calculateMode.divideMode -> {
-                answer = calculate(calculateMode, firstNumber, inputNumber)
-                view.setTextEtAnswer(answer)
-                firstNumber = answer
-                setInputNewNumber(true)
-                calculateMode = CalculateMode(divideMode = true)
+                if(isNumberClicked) {
+                    setNumberToFirstNumber(inputNumber)
+                } else
+                    setNumberToFirstNumber(answer)
             }
             isOperatorButtonClickedFirst -> {
                 calculateMode = CalculateMode(divideMode = true)
                 setNumberToFirstNumber(inputNumber)
                 isOperatorButtonClickedFirst = false
+            }
+            !calculateMode.divideMode -> {
+                answer = calculate(calculateMode, firstNumber, inputNumber)
+                view.setTextEtAnswer(answer)
+                firstNumber = answer
+                setInputNewNumber(true)
+                calculateMode = CalculateMode(divideMode = true)
             }
             !isOperatorButtonClickedFirst -> {
                 calculateMode = CalculateMode(divideMode = true)
@@ -148,10 +163,12 @@ class MainPresenter(val view: MainView) {
                 }
             }
         }
+        isNumberClicked = false
     }
 
     fun onResultClicked() {
         setInputNewNumber(true)
+        isNumberClicked = false
 
         when(calculateMode) {
             CalculateMode(plusMode = true) -> {
@@ -264,7 +281,6 @@ class MainPresenter(val view: MainView) {
 
     private fun setNumberToFirstNumber(number: Long) {
         this.firstNumber = number
-        isOperatorButtonClickedFirst = false
         isNumberClicked = false
         setInputNewNumber(true)
     }
