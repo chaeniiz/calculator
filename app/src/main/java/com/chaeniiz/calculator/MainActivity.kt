@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity(), CalculatorFragment.OnFragmentInteracti
 
     override fun onResetClicked(reset: Boolean) {
         resetAnswerView()
-        presenter.initNumberStatus()
+        presenter.resetCalculator()
     }
 
     override fun onResultClicked(result: Boolean) {
