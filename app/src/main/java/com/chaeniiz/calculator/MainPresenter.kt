@@ -53,52 +53,32 @@ class MainPresenter(val view: MainView) {
 
         when(calculateMode) {
             PLUS_ONCE.case -> {
-                answer = calculate(CalculateMode(plusMode = true), firstNumber, inputNumber)
-                firstNumber = inputNumber
-                view.setTextEtAnswer(answer)
-                setInputNewNumber(true)
+                resultClickedOnce(CalculateMode(plusMode = true))
                 calculateMode = CalculateMode(plusMode = true, resultMode = true)
             }
             PLUS_CONTINUE.case -> {
-                answer = calculate(CalculateMode(plusMode = true, resultMode = true), answer, inputNumber)
-                view.setTextEtAnswer(answer)
-                setInputNewNumber(true)
+                continueResultClick(CalculateMode(plusMode = true, resultMode = true))
             }
             MINUS_ONCE.case -> {
-                answer = calculate(CalculateMode(minusMode = true), firstNumber, inputNumber)
-                firstNumber = inputNumber
-                view.setTextEtAnswer(answer)
-                setInputNewNumber(true)
+                resultClickedOnce(CalculateMode(minusMode = true))
                 calculateMode = CalculateMode(minusMode = true, resultMode = true)
             }
             MINUS_CONTINUE.case -> {
-                answer = calculate(CalculateMode(minusMode = true, resultMode = true), inputNumber, answer)
-                view.setTextEtAnswer(answer)
-                setInputNewNumber(true)
+                continueResultClick(CalculateMode(minusMode = true, resultMode = true))
             }
             MULTIPLY_ONCE.case -> {
-                answer = calculate(CalculateMode(multiplyMode = true), firstNumber, inputNumber)
-                firstNumber = inputNumber
-                view.setTextEtAnswer(answer)
-                setInputNewNumber(true)
+                resultClickedOnce(CalculateMode(multiplyMode = true))
                 calculateMode = CalculateMode(multiplyMode = true, resultMode = true)
             }
             MULTIPLY_CONTINUE.case -> {
-                answer = calculate(CalculateMode(multiplyMode = true, resultMode = true), answer, inputNumber)
-                view.setTextEtAnswer(answer)
-                setInputNewNumber(true)
+                continueResultClick(CalculateMode(multiplyMode = true, resultMode = true))
             }
             DIVIDE_ONCE.case -> {
-                answer = calculate(CalculateMode(divideMode = true), firstNumber, inputNumber)
-                firstNumber = inputNumber
-                view.setTextEtAnswer(answer)
-                setInputNewNumber(true)
+                resultClickedOnce(CalculateMode(divideMode = true))
                 calculateMode = CalculateMode(divideMode = true, resultMode = true)
             }
             DIVIDE_CONTINUE.case -> {
-                answer = calculate(CalculateMode(divideMode = true, resultMode = true), inputNumber, answer)
-                view.setTextEtAnswer(answer)
-                setInputNewNumber(true)
+                continueResultClick(CalculateMode(divideMode = true, resultMode = true))
             }
         }
     }
@@ -193,6 +173,19 @@ class MainPresenter(val view: MainView) {
        }
        isNumberClicked = false
    }
+
+    private fun resultClickedOnce(calculateMode: CalculateMode) {
+        answer = calculate(calculateMode, firstNumber, inputNumber)
+        firstNumber = inputNumber
+        view.setTextEtAnswer(answer)
+        setInputNewNumber(true)
+    }
+
+    private fun continueResultClick(calculateMode: CalculateMode) {
+        answer = calculate(calculateMode, inputNumber, answer)
+        view.setTextEtAnswer(answer)
+        setInputNewNumber(true)
+    }
 
     private fun setNumberToFirstNumber(number: Long) {
         this.firstNumber = number
