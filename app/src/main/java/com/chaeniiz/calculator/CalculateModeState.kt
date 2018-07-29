@@ -1,6 +1,7 @@
 package com.chaeniiz.calculator
 
 enum class CalculateModeState(val case: CalculateMode) {
+    DEFAULT(CalculateMode(plusMode = false, minusMode = false, multiplyMode = false, divideMode = false, resultMode = false)),
     PLUS_ONCE(CalculateMode(plusMode = true)),
     PLUS_CONTINUE(CalculateMode(plusMode = true, resultMode = true)),
     MINUS_ONCE(CalculateMode(minusMode = true)),

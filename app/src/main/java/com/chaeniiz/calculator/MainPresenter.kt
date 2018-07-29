@@ -140,31 +140,31 @@ class MainPresenter(val view: MainView) {
         return answer
     }
 
-   private fun checkCalculatorCondition(calculateMode: CalculateMode) {
+   private fun checkCalculatorCondition(currentCalculateMode: CalculateMode) {
        when {
            this.calculateMode.resultMode -> {
-               this.calculateMode = calculateMode
+               this.calculateMode = currentCalculateMode
                if(isNumberClicked) {
                    setNumberToFirstNumber(inputNumber)
                } else
                    setNumberToFirstNumber(answer)
            }
-           this.calculateMode == CalculateMode() -> {
-               this.calculateMode = calculateMode
+           this.calculateMode == DEFAULT.case -> {
+               this.calculateMode = currentCalculateMode
                setNumberToFirstNumber(inputNumber)
            }
-           this.calculateMode != calculateMode -> {
+           this.calculateMode != currentCalculateMode -> {
                answer = calculate(this.calculateMode, firstNumber, inputNumber)
                view.setTextEtAnswer(answer)
                firstNumber = answer
                setInputNewNumber(true)
-               this.calculateMode = calculateMode
+               this.calculateMode = currentCalculateMode
            }
-           else -> {
-               this.calculateMode = calculateMode
+           this.calculateMode == currentCalculateMode -> {
+               this.calculateMode = currentCalculateMode
                setInputNewNumber(true)
                if (isNumberClicked) {
-                   answer = calculate(calculateMode, firstNumber, inputNumber)
+                   answer = calculate(currentCalculateMode, firstNumber, inputNumber)
                    firstNumber = answer
                    isNumberClicked = false
                    view.setTextEtAnswer(answer)
