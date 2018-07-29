@@ -1,6 +1,7 @@
 package com.chaeniiz.calculator
 
 import android.support.annotation.VisibleForTesting
+import com.chaeniiz.calculator.CalculateModeState.*
 
 class MainPresenter(val view: MainView) {
 
@@ -27,138 +28,22 @@ class MainPresenter(val view: MainView) {
     }
 
     fun onPlusClicked() {
-        when {
-            calculateMode.resultMode -> {
-                calculateMode = CalculateMode(plusMode = true)
-                if(isNumberClicked) {
-                    setNumberToFirstNumber(inputNumber)
-                } else
-                    setNumberToFirstNumber(answer)
-            }
-            calculateMode == CalculateMode() -> {
-                calculateMode = CalculateMode(plusMode = true)
-                setNumberToFirstNumber(inputNumber)
-            }
-            !calculateMode.plusMode -> {
-                answer = calculate(calculateMode, firstNumber, inputNumber)
-                view.setTextEtAnswer(answer)
-                firstNumber = answer
-                setInputNewNumber(true)
-                calculateMode = CalculateMode(plusMode = true)
-            }
-            else -> {
-                calculateMode = CalculateMode(plusMode = true)
-                setInputNewNumber(true)
-                if (isNumberClicked) {
-                    answer = calculate(CalculateMode(plusMode = true), firstNumber, inputNumber)
-                    firstNumber = answer
-                    isNumberClicked = false
-                    view.setTextEtAnswer(answer)
-                }
-            }
-        }
+        checkCalculatorCondition(CalculateMode(plusMode = true))
         isNumberClicked = false
     }
 
     fun onMinusClicked() {
-        when {
-            calculateMode.resultMode -> {
-                calculateMode = CalculateMode(minusMode = true)
-                if(isNumberClicked) {
-                    setNumberToFirstNumber(inputNumber)
-                } else
-                    setNumberToFirstNumber(answer)
-            }
-            calculateMode == CalculateMode() -> {
-                calculateMode = CalculateMode(minusMode = true)
-                setNumberToFirstNumber(inputNumber)
-            }
-            !calculateMode.minusMode -> {
-                answer = calculate(calculateMode, firstNumber, inputNumber)
-                view.setTextEtAnswer(answer)
-                firstNumber = answer
-                setInputNewNumber(true)
-                calculateMode = CalculateMode(minusMode = true)
-            }
-            else -> {
-                calculateMode = CalculateMode(minusMode = true)
-                setInputNewNumber(true)
-                if (isNumberClicked) {
-                    answer = calculate(CalculateMode(minusMode = true), firstNumber, inputNumber)
-                    firstNumber = answer
-                    isNumberClicked = false
-                    view.setTextEtAnswer(answer)
-                }
-            }
-        }
+        checkCalculatorCondition(CalculateMode(minusMode = true))
         isNumberClicked = false
     }
 
     fun onMultiplyClicked() {
-        when {
-            calculateMode.resultMode -> {
-                calculateMode = CalculateMode(multiplyMode = true)
-                if(isNumberClicked) {
-                    setNumberToFirstNumber(inputNumber)
-                } else
-                    setNumberToFirstNumber(answer)
-            }
-            calculateMode == CalculateMode() -> {
-                calculateMode = CalculateMode(multiplyMode = true)
-                setNumberToFirstNumber(inputNumber)
-            }
-            !calculateMode.multiplyMode -> {
-                answer = calculate(calculateMode, firstNumber, inputNumber)
-                view.setTextEtAnswer(answer)
-                firstNumber = answer
-                setInputNewNumber(true)
-                calculateMode = CalculateMode(multiplyMode = true)
-            }
-            else -> {
-                calculateMode = CalculateMode(multiplyMode = true)
-                setInputNewNumber(true)
-                if (isNumberClicked) {
-                    answer = calculate(CalculateMode(multiplyMode = true), firstNumber, inputNumber)
-                    firstNumber = answer
-                    isNumberClicked = false
-                    view.setTextEtAnswer(answer)
-                }
-            }
-        }
+        checkCalculatorCondition(CalculateMode(multiplyMode = true))
         isNumberClicked = false
     }
 
     fun onDivideClicked() {
-        when {
-            calculateMode.resultMode -> {
-                calculateMode = CalculateMode(divideMode = true)
-                if(isNumberClicked) {
-                    setNumberToFirstNumber(inputNumber)
-                } else
-                    setNumberToFirstNumber(answer)
-            }
-            calculateMode == CalculateMode() -> {
-                calculateMode = CalculateMode(divideMode = true)
-                setNumberToFirstNumber(inputNumber)
-            }
-            !calculateMode.divideMode -> {
-                answer = calculate(calculateMode, firstNumber, inputNumber)
-                view.setTextEtAnswer(answer)
-                firstNumber = answer
-                setInputNewNumber(true)
-                calculateMode = CalculateMode(divideMode = true)
-            }
-            else -> {
-                calculateMode = CalculateMode(divideMode = true)
-                setInputNewNumber(true)
-                if (isNumberClicked) {
-                    answer = calculate(CalculateMode(divideMode = true), firstNumber, inputNumber)
-                    firstNumber = answer
-                    isNumberClicked = false
-                    view.setTextEtAnswer(answer)
-                }
-            }
-        }
+        checkCalculatorCondition(CalculateMode(divideMode = true))
         isNumberClicked = false
     }
 
@@ -167,53 +52,33 @@ class MainPresenter(val view: MainView) {
         isNumberClicked = false
 
         when(calculateMode) {
-            CalculateMode(plusMode = true) -> {
-                answer = calculate(CalculateMode(plusMode = true), firstNumber, inputNumber)
-                firstNumber = inputNumber
-                view.setTextEtAnswer(answer)
-                setInputNewNumber(true)
+            PLUS_ONCE.case -> {
+                resultClickedOnce(CalculateMode(plusMode = true))
                 calculateMode = CalculateMode(plusMode = true, resultMode = true)
             }
-            CalculateMode(plusMode = true, resultMode = true) -> {
-                answer = calculate(CalculateMode(plusMode = true, resultMode = true), answer, inputNumber)
-                view.setTextEtAnswer(answer)
-                setInputNewNumber(true)
+            PLUS_CONTINUE.case -> {
+                continueResultClick(CalculateMode(plusMode = true, resultMode = true))
             }
-            CalculateMode(minusMode = true) -> {
-                answer = calculate(CalculateMode(minusMode = true), firstNumber, this.inputNumber)
-                firstNumber = inputNumber
-                view.setTextEtAnswer(answer)
-                setInputNewNumber(true)
+            MINUS_ONCE.case -> {
+                resultClickedOnce(CalculateMode(minusMode = true))
                 calculateMode = CalculateMode(minusMode = true, resultMode = true)
             }
-            CalculateMode(minusMode = true, resultMode = true) -> {
-                answer = calculate(CalculateMode(minusMode = true, resultMode = true), inputNumber, answer)
-                view.setTextEtAnswer(answer)
-                setInputNewNumber(true)
+            MINUS_CONTINUE.case -> {
+                continueResultClick(CalculateMode(minusMode = true, resultMode = true))
             }
-            CalculateMode(multiplyMode = true) -> {
-                answer = calculate(CalculateMode(multiplyMode = true), firstNumber, inputNumber)
-                firstNumber = inputNumber
-                view.setTextEtAnswer(answer)
-                setInputNewNumber(true)
+            MULTIPLY_ONCE.case -> {
+                resultClickedOnce(CalculateMode(multiplyMode = true))
                 calculateMode = CalculateMode(multiplyMode = true, resultMode = true)
             }
-            CalculateMode(multiplyMode = true, resultMode = true) -> {
-                answer = calculate(CalculateMode(multiplyMode = true, resultMode = true), answer, inputNumber)
-                view.setTextEtAnswer(answer)
-                setInputNewNumber(true)
+            MULTIPLY_CONTINUE.case -> {
+                continueResultClick(CalculateMode(multiplyMode = true, resultMode = true))
             }
-            CalculateMode(divideMode = true) -> {
-                answer = calculate(CalculateMode(divideMode = true), firstNumber, inputNumber)
-                firstNumber = inputNumber
-                view.setTextEtAnswer(answer)
-                setInputNewNumber(true)
+            DIVIDE_ONCE.case -> {
+                resultClickedOnce(CalculateMode(divideMode = true))
                 calculateMode = CalculateMode(divideMode = true, resultMode = true)
             }
-            CalculateMode(divideMode = true, resultMode = true) -> {
-                answer = calculate(CalculateMode(divideMode = true, resultMode = true), inputNumber, answer)
-                view.setTextEtAnswer(answer)
-                setInputNewNumber(true)
+            DIVIDE_CONTINUE.case -> {
+                continueResultClick(CalculateMode(divideMode = true, resultMode = true))
             }
         }
     }
@@ -273,6 +138,53 @@ class MainPresenter(val view: MainView) {
             else -> answer
         }
         return answer
+    }
+
+   private fun checkCalculatorCondition(currentCalculateMode: CalculateMode) {
+       when {
+           this.calculateMode.resultMode -> {
+               this.calculateMode = currentCalculateMode
+               if(isNumberClicked) {
+                   setNumberToFirstNumber(inputNumber)
+               } else
+                   setNumberToFirstNumber(answer)
+           }
+           this.calculateMode == DEFAULT.case -> {
+               this.calculateMode = currentCalculateMode
+               setNumberToFirstNumber(inputNumber)
+           }
+           this.calculateMode != currentCalculateMode -> {
+               answer = calculate(this.calculateMode, firstNumber, inputNumber)
+               view.setTextEtAnswer(answer)
+               firstNumber = answer
+               setInputNewNumber(true)
+               this.calculateMode = currentCalculateMode
+           }
+           this.calculateMode == currentCalculateMode -> {
+               this.calculateMode = currentCalculateMode
+               setInputNewNumber(true)
+               if (isNumberClicked) {
+                   answer = calculate(currentCalculateMode, firstNumber, inputNumber)
+                   firstNumber = answer
+                   isNumberClicked = false
+                   view.setTextEtAnswer(answer)
+               }
+           }
+       }
+       isNumberClicked = false
+   }
+
+    private fun resultClickedOnce(calculateMode: CalculateMode) {
+        answer = calculate(calculateMode, firstNumber, inputNumber)
+        firstNumber = inputNumber
+        view.setTextEtAnswer(answer)
+        setInputNewNumber(true)
+    }
+
+    private fun continueResultClick(calculateMode: CalculateMode) {
+        answer = calculate(calculateMode, inputNumber, answer)
+        view.setTextEtAnswer(answer)
+        setInputNewNumber(true)
     }
 
     private fun setNumberToFirstNumber(number: Long) {
